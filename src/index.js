@@ -10,9 +10,3 @@ ReactDOM.render(
   </div>,
   document.getElementById("root")
 );
-
-console.log(
-  <div className="container">
-    <span>chenjiang</span>
-  </div>
-);
