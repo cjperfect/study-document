@@ -1,14 +1,12 @@
-import React from "./React";
+import React from "react";
+import ReactDOM from "react-dom";
 
-import ReactDOM from "./React-dom";
-
-/* 输入一个jsx，在执行阶段，自动去react里面找到createElement函数并运行 */
+// const root = ReactDOM.createRoot(document.getElementById("root"));
+// root.render(<div>cxkyyds</div>);
 
 ReactDOM.render(
-  <div className="container" key={"1"} ref={"aaa"} style={{ color: "red" }}>
-    chenjiang
+  <div className="container">
+    <span>chenjiang</span>
   </div>,
   document.getElementById("root")
 );
-
-// root.render(<div>cxkyyds</div>);
