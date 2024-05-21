@@ -16,6 +16,7 @@ function mount(VNode, container) {
 
 function mountArray(children, parent) {
   for (let i = 0; i < children.length; i++) {
+    // 文本节点
     if (typeof children[i] === "string") {
       parent.appendChild(document.createTextNode(children[i]));
     } else {
@@ -49,23 +50,27 @@ function createDOM(VNode) {
 
   const { type, $$typeof, props } = VNode;
 
+  // ============ 1. 创建元素 =============
   let dom;
   if (type && $$typeof === REACT_ELEMENT) {
     dom = document.createElement(type);
   }
 
-  // 有属性
   if (props) {
+    // ============ 2. 处理子节点 =============
     if (typeof props.children === "object" && props.children.type) {
+      // 只有一子个节点，创建并挂载
       mount(props.children, dom);
     } else if (Array.isArray(props.children)) {
+      // 有多个子节点，逐个创建并挂载
       mountArray(props.children, dom);
     } else if (typeof props.children === "string") {
+      // 子节点为字符串，直接创建文本节点并挂载
       dom.appendChild(document.createTextNode(props.children));
     }
 
-    // 处理属性
-
+    // ============ 3. 处理属性 =============
+    // JSX身上所带的属性，绑定到DOM上
     setPropsForDOM(dom, props);
   }
 
