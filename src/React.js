@@ -1,4 +1,5 @@
 import { REACT_ELEMENT } from "./utils";
+import { Component } from "./Component";
 
 function createElement(type, properties, children) {
   const key = properties.key || null;
@@ -21,6 +22,6 @@ function createElement(type, properties, children) {
   return { type, $$typeof: REACT_ELEMENT, key, ref, props };
 }
 
-const React = { createElement };
+const React = { createElement, Component };
 
 export default React;

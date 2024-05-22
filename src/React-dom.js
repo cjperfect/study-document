@@ -53,8 +53,16 @@ function createDOM(VNode) {
   // ============ 1. 创建元素 =============
   let dom;
 
-  // 说明需要渲染的是个函数组件
+  // 可以在index.js打印一下，看看babel把组件或者JSX转换成什么样的，这样就可以找到type是啥了
+
+  // 说明渲染的是类组件，此时type是类
+  // 类也是函数，所以我们要在类组件身上加一个标识，搞个静态属性
+  if (typeof type === "function" && $$typeof === REACT_ELEMENT && type.IS_CLASS_COMPONENT) {
+    return getDomByClassComponent(VNode);
+  }
+
   if (typeof type === "function" && $$typeof === REACT_ELEMENT) {
+    // 说明需要渲染的是个函数组件，此时type是函数本身
     return getDomByFunctionComponent(VNode);
   }
   if (type && $$typeof === REACT_ELEMENT) {
@@ -80,6 +88,15 @@ function createDOM(VNode) {
   }
 
   return dom;
+}
+
+function getDomByClassComponent(VNode) {
+  const { type, props } = VNode;
+  // 类组件，type是类,因此可以直接new
+  const instance = new type(props);
+  const renderDOM = instance.render();
+  if (!renderDOM) return null;
+  return createDOM(renderDOM);
 }
 
 function getDomByFunctionComponent(VNode) {
