@@ -52,6 +52,11 @@ function createDOM(VNode) {
 
   // ============ 1. 创建元素 =============
   let dom;
+
+  // 说明需要渲染的是个函数组件
+  if (typeof type === "function" && $$typeof === REACT_ELEMENT) {
+    return getDomByFunctionComponent(VNode);
+  }
   if (type && $$typeof === REACT_ELEMENT) {
     dom = document.createElement(type);
   }
@@ -75,6 +80,14 @@ function createDOM(VNode) {
   }
 
   return dom;
+}
+
+function getDomByFunctionComponent(VNode) {
+  const { type, props } = VNode;
+  // 由于type为函数组件，本身是个函数，那我们执行一下就可以得到返回值，而返回值就是我们需要渲染的JSX
+  const renderDOM = type(props);
+  if (!renderDOM) return null;
+  return createDOM(renderDOM);
 }
 
 const ReactDOM = {
