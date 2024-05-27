@@ -85,6 +85,7 @@ function createDOM(VNode) {
     // ============ 3. 处理属性 =============
     // JSX身上所带的属性，绑定到DOM上
     setPropsForDOM(dom, props);
+    VNode.dom = dom;
   }
 
   return dom;
@@ -95,6 +96,15 @@ function getDomByClassComponent(VNode) {
   // 类组件，type是类,因此可以直接new
   const instance = new type(props);
   const renderDOM = instance.render();
+  instance.oldVNode = renderDOM; // 用于更新使用，新旧虚拟DOM对比
+  // ================测试代码====================
+  setTimeout(() => {
+    instance.setState({
+      name: "chenjiang666",
+    });
+  }, 3000);
+  // ================测试代码====================
+
   if (!renderDOM) return null;
   return createDOM(renderDOM);
 }
@@ -105,6 +115,20 @@ function getDomByFunctionComponent(VNode) {
   const renderDOM = type(props);
   if (!renderDOM) return null;
   return createDOM(renderDOM);
+}
+
+export function findDomByVNode(VNode) {
+  if (!VNode) return;
+  // 此时发现虚拟DOM和真实DOM没有关联，无法找到，那么就需要在生成DOM的时候，将两者绑定起来，移步到88行
+  if (VNode.dom) return VNode.dom;
+}
+
+export function updateDomTree(oldDOM, newVNode) {
+  // 清除旧DOM，通过新的虚拟DOM生成新的DOM并挂在到页面中
+  const parentNode = oldDOM.parentNode;
+  parentNode.removeChild(oldDOM);
+
+  parentNode.appendChild(createDOM(newVNode));
 }
 
 const ReactDOM = {
