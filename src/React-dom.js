@@ -50,7 +50,7 @@ function setPropsForDOM(dom, props) {
 function createDOM(VNode) {
   // 1.创建元素， 2. 处理子节点  3. 处理属性props
 
-  const { type, $$typeof, props } = VNode;
+  const { type, $$typeof, props, ref } = VNode;
 
   // ============ 1. 创建元素 =============
   let dom;
@@ -87,6 +87,11 @@ function createDOM(VNode) {
     // ============ 3. 处理属性 =============
     // JSX身上所带的属性，绑定到DOM上
     setPropsForDOM(dom, props);
+
+    // 给原生标签的ref赋值
+    if (ref) {
+      ref.current = dom;
+    }
     VNode.dom = dom;
   }
 
@@ -94,11 +99,13 @@ function createDOM(VNode) {
 }
 
 function getDomByClassComponent(VNode) {
-  const { type, props } = VNode;
+  const { type, props, ref } = VNode;
   // 类组件，type是类,因此可以直接new
   const instance = new type(props);
   const renderDOM = instance.render();
   instance.oldVNode = renderDOM; // 用于更新使用，新旧虚拟DOM对比
+  // 给类组件的ref赋值，ref其实就是类的实例
+  if (ref) ref.current = instance;
   // ================测试代码====================
   // setTimeout(() => {
   //   instance.setState({

@@ -11,30 +11,64 @@ import ReactDOM from "./React-dom";
 //     </div>
 //   );
 // }
+
+class ChildComponent extends React.Component {
+  constructor(props) {
+    super(props);
+    this.inputRef = React.createRef();
+    this.handleClick = this.handleClick.bind(this);
+    this.state = {
+      count: 0,
+    };
+  }
+
+  handleClick(num) {
+    this.setState({
+      count: this.state.count + num,
+    });
+  }
+  render() {
+    return (
+      <div>
+        <h2
+          onClick={() => {
+            this.handleClick(1);
+          }}
+        >
+          点我：{this.state.count}
+        </h2>
+      </div>
+    );
+  }
+}
+
 class MyComponent extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      name: "chenjiang",
-      count: 0,
-    };
+    this.childRef = React.createRef();
+    this.inputRef = React.createRef();
   }
   render() {
     return (
       <div className="container">
+        <input ref={this.inputRef} />
         <button
-          // 由于事件机制还没处理，这里还不能实现点击操作，只能在react-dom里面对类实例调用setState方法，做个验证
           onClick={() => {
-            this.setState({
-              count: this.state.count + 1,
-            });
+            this.inputRef.current.focus();
           }}
         >
-          click
+          获取焦点
         </button>
-        <p>
-          {this.state.name}：{this.state.count}
-        </p>
+        <br />
+        <button
+          onClick={() => {
+            this.childRef.current.handleClick(100);
+          }}
+        >
+          点我子组件+100
+        </button>
+
+        <ChildComponent ref={this.childRef} />
       </div>
     );
   }

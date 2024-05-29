@@ -22,6 +22,12 @@ function createElement(type, properties, children) {
   return { type, $$typeof: REACT_ELEMENT, key, ref, props };
 }
 
-const React = { createElement, Component };
+function createRef() {
+  return {
+    current: null,
+  };
+}
+
+const React = { createElement, Component, createRef };
 
 export default React;
