@@ -16,6 +16,7 @@ class MyComponent extends React.Component {
     super(props);
     this.state = {
       name: "chenjiang",
+      count: 0,
     };
   }
   render() {
@@ -25,13 +26,15 @@ class MyComponent extends React.Component {
           // 由于事件机制还没处理，这里还不能实现点击操作，只能在react-dom里面对类实例调用setState方法，做个验证
           onClick={() => {
             this.setState({
-              name: "chenjiang666",
+              count: this.state.count + 1,
             });
           }}
         >
           click
         </button>
-        <p>{this.state.name}</p>
+        <p>
+          {this.state.name}：{this.state.count}
+        </p>
       </div>
     );
   }

@@ -1,13 +1,13 @@
 import { findDomByVNode, updateDomTree } from "./React-dom";
 
 // 更新器队列
-let updateQueue = {
+export let updateQueue = {
   isBatch: false,
   updates: new Set(),
 };
 
 // 执行批量更新的函数
-function flushUpdaterQueue() {
+export function flushUpdaterQueue() {
   updateQueue.isBatch = false;
 
   // 执行每个更新器的更新操作

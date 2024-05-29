@@ -1,4 +1,5 @@
 import { REACT_ELEMENT } from "./utils";
+import { addEvent } from "./Event";
 
 function render(VNode, container) {
   // 处理虚拟dom，转换成真实dom
@@ -17,7 +18,7 @@ function mount(VNode, container) {
 function mountArray(children, parent) {
   for (let i = 0; i < children.length; i++) {
     // 文本节点
-    if (typeof children[i] === "string") {
+    if (typeof children[i] === "string" || typeof children[i] === "number") {
       parent.appendChild(document.createTextNode(children[i]));
     } else {
       mount(children[i], parent);
@@ -33,6 +34,7 @@ function setPropsForDOM(dom, props) {
     if (key === "children") continue;
     // 事件需要单独处理
     if (/^on[A-Z].*/.test(key)) {
+      addEvent(dom, key.toLowerCase(), props[key]);
     } else if (key === "style") {
       // 传过来的是一个对象
       Object.keys(props[key]).forEach((styleName) => {
@@ -98,11 +100,11 @@ function getDomByClassComponent(VNode) {
   const renderDOM = instance.render();
   instance.oldVNode = renderDOM; // 用于更新使用，新旧虚拟DOM对比
   // ================测试代码====================
-  setTimeout(() => {
-    instance.setState({
-      name: "chenjiang666",
-    });
-  }, 3000);
+  // setTimeout(() => {
+  //   instance.setState({
+  //     name: "chenjiang666",
+  //   });
+  // }, 3000);
   // ================测试代码====================
 
   if (!renderDOM) return null;
