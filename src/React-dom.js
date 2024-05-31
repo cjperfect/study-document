@@ -1,4 +1,4 @@
-import { REACT_ELEMENT } from "./utils";
+import { REACT_ELEMENT, REACT_FORWARD_ELEMENT } from "./utils";
 import { addEvent } from "./Event";
 
 function render(VNode, container) {
@@ -56,6 +56,11 @@ function createDOM(VNode) {
   let dom;
 
   // 可以在index.js打印一下，看看babel把组件或者JSX转换成什么样的，这样就可以找到type是啥了
+
+  // forwardRef组件, type是一个对象
+  if (type && type.$$typeof === REACT_FORWARD_ELEMENT) {
+    return getDomByForwardRefFunctionComponent(VNode);
+  }
 
   // 说明渲染的是类组件，此时type是类
   // 类也是函数，所以我们要在类组件身上加一个标识，搞个静态属性
@@ -122,6 +127,14 @@ function getDomByFunctionComponent(VNode) {
   const { type, props } = VNode;
   // 由于type为函数组件，本身是个函数，那我们执行一下就可以得到返回值，而返回值就是我们需要渲染的JSX
   const renderDOM = type(props);
+  if (!renderDOM) return null;
+  return createDOM(renderDOM);
+}
+
+function getDomByForwardRefFunctionComponent(VNode) {
+  const { props, ref, type } = VNode;
+
+  const renderDOM = type.render(props, ref);
   if (!renderDOM) return null;
   return createDOM(renderDOM);
 }
